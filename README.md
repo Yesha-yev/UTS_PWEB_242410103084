@@ -71,69 +71,27 @@ Halaman View
 1. login.blade.php
 Form login dengan input username dan password.
 
-<form method="POST" action="{{ route('doLogin') }}">
-                @csrf
-                <div class="mb-3">
-                    <label for="username" class="form-label">Username</label>
-                    <input type="text" class="form-control" id="username" name="username" required>
-                </div>
+Username
+Password
+Login
 
-                <div class="mb-3">
-                    <label for="password" class="form-label">Password</label>
-                    <input type="password" class="form-control" id="password" name="password" required>
-                </div>
-
-                <button type="submit" class="btn btn-dark w-100">Login</button>
-            </form>
 2. dashboard.blade.php
 Menampilkan:
-<div class="container text-center mt-5 py-5">
-    <h1 class="fw-bold mb-3">Selamat datang di Galeri Seni Indonesia, {{ $username }}! 👋</h1>
-    <p class="lead">Cari dan lihatlah karya seni Lukisan dan Patung terbaik dari Indonesia</p>
-    <a href="{{ route('pengelolaan') }}" class="btn btn-dark mt-3">Lihat Koleksi</a>
-</div>
-3. profile.blade.php
-Tampilkan detail lengkap user:
-<div class="card mx-auto shadow" style="max-width: 400px;">
-    <div class="card-body text-center">
-        <img src="{{ $profil['foto'] }}" class="rounded-circle mb-3" width="150" height="150">
-        <h4>{{ $profil['nama'] }}</h4>
-        <p><strong>Bidang:</strong> {{ $profil['bidang'] }}</p>
-        <p><strong>Username:</strong> {{ $profil['username'] }}</p>
-        <p><em>{{ $profil['bio'] }}</em></p>
-    </div>
-</div>
+
+Selamat datang di Galeri Seni Indonesia, {{ $username }}! 👋
+Cari dan lihatlah karya seni Lukisan dan Patung terbaik dari Indonesia
+
 4. pengelolaan.blade.php
 Loop dan tampilkan card karya seni:
-<div class="row">
-    @foreach($data as $item)
-        <div class="col-md-4 mb-4 d-flex">
-            <div class="card flex-fill text-center">
-                <img src="{{ $item['gambar'] }}" class="card-img-top" alt="{{ $item['judul'] }}">
-                <div class="card-body">
-                    <h5 class="card-title">{{ $item['judul'] }}</h5>
-                    <p class="card-text">Seniman: {{ $item['seniman'] }}</p>
-                    <p class="card-text"><small class="text-muted">{{ $item['jenis'] }} | Tahun {{ $item['tahun'] }}</small></p>
-                    <a href="{{ route('detailkarya', ['id'=>$item['id']]) }}" class="btn card-btn-primary">Selengkapnya</a>
-                </div>
-            </div>
-        </div>
-    @endforeach
-</div>
-@endforeach
+
+Menampilkan beberaopa card berisi judul, tahun, dan seniman.
+
 Halaman Layouts dan Components
 1. app.blade.php
+
+Membuat kerangka utama
 <body class="d-flex flex-column min-vh-100">
 
-    <img src="{{ asset('images/palet.jpg') }}" alt="Palet" class="palet-awan">
-    <img src="{{ asset('images/bb.jpg') }}" alt="Black flower" class="bb-awan">
-    <img src="{{ asset('images/b.jpg') }}" alt="blackflower" class="b-awan">
-    <img src="{{ asset('images/pr.jpg') }}" alt="pitamerah" class="pr-awan">
-    <img src="{{ asset('images/br.png') }}" alt="brush red" class="br-awan">
-    <img src="{{ asset('images/fw.png') }}" alt="bunag putih" class="fw-awan">
-    <img src="{{ asset('images/q.png')}}" alt="tanya" class="q-awan">
-    <img src="{{ asset('images/pp.png')}}" alt="pita pink" class="pp-awan">
-    <img src="{{ asset('images/p1.png') }}" alt="brush pink" class="p-awan">
     @include('components.navbar')
 
     <div class="container mb-5 mt-4 flex-grow-1">
@@ -146,53 +104,14 @@ Halaman Layouts dan Components
 </body>
 2. navbar.blade.php
 Menampilkan Navbar atau header: 
-<nav class="navbar navbar-expand-lg shadow-sm py-3">
-  <div class="container">
-    <a class="navbar-brand" href="{{ route('pengelolaan') }}"><span class="bg-gradient-logo me-2 rounded-circle d-flex justify-content-center align-items-center" style="width:35px; height:35px;">🎨🎭👩🏻‍🎨</span><span class="fw-semibold text-dark">Galeri<span class="text-accent">Seni</span></span></a>
-    <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"><i class="fa-solid fa-bars fa-lg text-dark"></i></button>
-    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-        <ul class="navbar-nav">
-            @if(session('username'))
-            <li class="nav-item"><a class="nav-link" href="{{ route('dashboard') }}">Dashboard</a></li>
-            <li class="nav-item"><a class="nav-link" href="{{ route('pengelolaan') }}">Karya Seni</a></li>
-            <li class="nav-item"><a class="nav-link" href="{{ route('profile') }}">Profil</a></li>
-            <li class="nav-item"><a class="nav-link" href="{{ route('logout') }}">Logout</a></li>
-            @else
-            <li class="nav-item"><a class="nav-link" href="{{ route('login') }}">Login</a></li>
-            <li class="nav-item"><a class="nav-link" href="{{ route('pengelolaan') }}">Karya Seni</a></li>
-        @endif
-        </ul>
-    </div>
-  </div>
-</nav>
+- Login
+- Karya Seni
+- Dashboard
+- Profile
+- Logout
+
 3. footer.blade.php
 Menampilkan Foooter dibawah: 
-<footer class="footer-modern position-relative">
-    <img src="{{ asset('images/mine.png') }}" alt="mine" class="footer-art">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-4 mb-4">
-                <h5>Galeri Seni</h5>
-                <p >Karya Lukisan dan Patung Terbaik di Indonesia</p>
-            </div>
-            <div class="col-md-4 mb-4">
-                <h5>Quick Links</h5>
-                <ul>
-                    <li><a href="{{ route('dashboard') }}">Home</a></li>
-                    <li><a href="{{ route('pengelolaan') }}">Karya Seni</a></li>
-                    <li><a href="{{ route('profile') }}">Profil</a></li>
-                    <li><a href="{{ route('logout') }}">Logout</a></li>
-                </ul>
-            </div>
-            <div class="col-md-4 mb-4">
-                <h5>Hubungi Admin</h5>
-                <p><i class="bi bi-geo-alt"></i>Jl.Kalisungai No.123</p>
-                <p><i class="bi bi-envelope"></i>galeriseni@cantik.com</p>
-                <p><i class="bi bi-phone"></i>+62 812-3455-6789</p>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <p>&copy; 2024 Galeri Seni. All rights reserved.</p>
-        </div>
-    </div>
-</footer>
+- Alamat galeriseni
+- Deskripsi singkat
+- Fitur
