@@ -1,65 +1,198 @@
 # UTS_PWEB_242410103084
 
 Sistem sederhana tentang galeri seni, berisi 2 jenis karya seni yaitu Lukisan dan juga Patung. Tujuan sistem ini adalah untuk mengenalkan karya karya milik Indonesia yang mendunia ke warga lokal tanpa harus mengahadiri acara pameran seni. Memudahkan kolektor karya seni yang ingin mencari informasi, serta memudahkan para pencinta karya seni untuk melihat karya yang mereka kagumi. Membantu para seniman untuk mengenalkan karya mereka yang lainnya.
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+UTS Praktikum Pemrograman Berbasis Website
+Projek Laravel sederhana yang memuat sistem login, dashboard, profil, dan halaman pengelolaan.
 
-## About Laravel
+Fitur Utama
+Login: menggunakan username & password.
+Dashboard: Menyambut user setelah login.
+Profile: Menampilkan info user yang sedang login.
+Pengelolaan: Menampilkan daftar karya seni dari controller dalam bentuk card.
+Blade Component: Navbar & Footer.
+Struktur Folder
+/routes
+└── web.php
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+/app/Http/Controllers
+└── PageController.php
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+/resources/views
+├── layouts/
+│   └── app.blade.php
+├── components/
+│   ├── navbar.blade.php
+│   └── footer.blade.php
+├── login.blade.php
+├── dashboard.blade.php
+├── profile.blade.php
+├── detailkarya.blade.php
+└── pengelolaan.blade.php
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Routing (routes/web.php)
+<?php
 
-## Learning Laravel
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PageController;
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+Route::get('/', [PageController::class, 'login'])->name('login');
+Route::post('/login', [PageController::class, 'doLogin'])->name('doLogin');
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+Route::get('/dashboard', [PageController::class, 'dashboard'])->name('dashboard');
+Route::get('/pengelolaan', [PageController::class, 'pengelolaan'])->name('pengelolaan');
+Route::get('/profile', [PageController::class, 'profile'])->name('profile');
+Route::get('/logout', [PageController::class,'logout'])->name('logout');
+Route::get('/detailkarya/{id}', [PageController::class,'detailkarya'])->name('detailkarya');
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+Controller: PageController.php
+Semua halaman diproses melalui controller PageController.
+Login dilakukan dengan mencocokkan input dari user terhadap array user.
+Contoh struktur array user:
+private $akun = [
+            'admin' => [
+                'username'=> 'admin',
+                'password'=> '123',
+                'nama'=> 'ADMIN TERCINTA',
+                'bidang' => 'Operator',
+                'bio'=> 'SAYA ADMIN',
+                'foto'=> 'images/me1.jpg'
+            ],
+            'faiz' => [
+                'username'=> 'faiz',
+                'password'=> 'rasa',
+                'nama'=> 'Faiz Ulfia Sasmita',
+                'bidang' => 'Lukisan dan Patung',
+                'bio'=> 'Seniman muda yang mengekspresikan emosi lewat warna, bentuk, serta rasa.',
+                'foto'=> 'images/me1.jpg'
+            ]
+            ];
+Halaman View
+1. login.blade.php
+Form login dengan input username dan password.
 
-## Laravel Sponsors
+<form method="POST" action="{{ route('doLogin') }}">
+                @csrf
+                <div class="mb-3">
+                    <label for="username" class="form-label">Username</label>
+                    <input type="text" class="form-control" id="username" name="username" required>
+                </div>
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="password" name="password" required>
+                </div>
 
-### Premium Partners
+                <button type="submit" class="btn btn-dark w-100">Login</button>
+            </form>
+2. dashboard.blade.php
+Menampilkan:
+<div class="container text-center mt-5 py-5">
+    <h1 class="fw-bold mb-3">Selamat datang di Galeri Seni Indonesia, {{ $username }}! 👋</h1>
+    <p class="lead">Cari dan lihatlah karya seni Lukisan dan Patung terbaik dari Indonesia</p>
+    <a href="{{ route('pengelolaan') }}" class="btn btn-dark mt-3">Lihat Koleksi</a>
+</div>
+3. profile.blade.php
+Tampilkan detail lengkap user:
+<div class="card mx-auto shadow" style="max-width: 400px;">
+    <div class="card-body text-center">
+        <img src="{{ $profil['foto'] }}" class="rounded-circle mb-3" width="150" height="150">
+        <h4>{{ $profil['nama'] }}</h4>
+        <p><strong>Bidang:</strong> {{ $profil['bidang'] }}</p>
+        <p><strong>Username:</strong> {{ $profil['username'] }}</p>
+        <p><em>{{ $profil['bio'] }}</em></p>
+    </div>
+</div>
+4. pengelolaan.blade.php
+Loop dan tampilkan card karya seni:
+<div class="row">
+    @foreach($data as $item)
+        <div class="col-md-4 mb-4 d-flex">
+            <div class="card flex-fill text-center">
+                <img src="{{ $item['gambar'] }}" class="card-img-top" alt="{{ $item['judul'] }}">
+                <div class="card-body">
+                    <h5 class="card-title">{{ $item['judul'] }}</h5>
+                    <p class="card-text">Seniman: {{ $item['seniman'] }}</p>
+                    <p class="card-text"><small class="text-muted">{{ $item['jenis'] }} | Tahun {{ $item['tahun'] }}</small></p>
+                    <a href="{{ route('detailkarya', ['id'=>$item['id']]) }}" class="btn card-btn-primary">Selengkapnya</a>
+                </div>
+            </div>
+        </div>
+    @endforeach
+</div>
+@endforeach
+Halaman Layouts dan Components
+1. app.blade.php
+<body class="d-flex flex-column min-vh-100">
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+    <img src="{{ asset('images/palet.jpg') }}" alt="Palet" class="palet-awan">
+    <img src="{{ asset('images/bb.jpg') }}" alt="Black flower" class="bb-awan">
+    <img src="{{ asset('images/b.jpg') }}" alt="blackflower" class="b-awan">
+    <img src="{{ asset('images/pr.jpg') }}" alt="pitamerah" class="pr-awan">
+    <img src="{{ asset('images/br.png') }}" alt="brush red" class="br-awan">
+    <img src="{{ asset('images/fw.png') }}" alt="bunag putih" class="fw-awan">
+    <img src="{{ asset('images/q.png')}}" alt="tanya" class="q-awan">
+    <img src="{{ asset('images/pp.png')}}" alt="pita pink" class="pp-awan">
+    <img src="{{ asset('images/p1.png') }}" alt="brush pink" class="p-awan">
+    @include('components.navbar')
 
-## Contributing
+    <div class="container mb-5 mt-4 flex-grow-1">
+        @yield('content')
+    </div>
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+    @include('components.footer')
 
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
->>>>>>> 722b23d (pertama)
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+2. navbar.blade.php
+Menampilkan Navbar atau header: 
+<nav class="navbar navbar-expand-lg shadow-sm py-3">
+  <div class="container">
+    <a class="navbar-brand" href="{{ route('pengelolaan') }}"><span class="bg-gradient-logo me-2 rounded-circle d-flex justify-content-center align-items-center" style="width:35px; height:35px;">🎨🎭👩🏻‍🎨</span><span class="fw-semibold text-dark">Galeri<span class="text-accent">Seni</span></span></a>
+    <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"><i class="fa-solid fa-bars fa-lg text-dark"></i></button>
+    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+        <ul class="navbar-nav">
+            @if(session('username'))
+            <li class="nav-item"><a class="nav-link" href="{{ route('dashboard') }}">Dashboard</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ route('pengelolaan') }}">Karya Seni</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ route('profile') }}">Profil</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ route('logout') }}">Logout</a></li>
+            @else
+            <li class="nav-item"><a class="nav-link" href="{{ route('login') }}">Login</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ route('pengelolaan') }}">Karya Seni</a></li>
+        @endif
+        </ul>
+    </div>
+  </div>
+</nav>
+3. footer.blade.php
+Menampilkan Foooter dibawah: 
+<footer class="footer-modern position-relative">
+    <img src="{{ asset('images/mine.png') }}" alt="mine" class="footer-art">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <h5>Galeri Seni</h5>
+                <p >Karya Lukisan dan Patung Terbaik di Indonesia</p>
+            </div>
+            <div class="col-md-4 mb-4">
+                <h5>Quick Links</h5>
+                <ul>
+                    <li><a href="{{ route('dashboard') }}">Home</a></li>
+                    <li><a href="{{ route('pengelolaan') }}">Karya Seni</a></li>
+                    <li><a href="{{ route('profile') }}">Profil</a></li>
+                    <li><a href="{{ route('logout') }}">Logout</a></li>
+                </ul>
+            </div>
+            <div class="col-md-4 mb-4">
+                <h5>Hubungi Admin</h5>
+                <p><i class="bi bi-geo-alt"></i>Jl.Kalisungai No.123</p>
+                <p><i class="bi bi-envelope"></i>galeriseni@cantik.com</p>
+                <p><i class="bi bi-phone"></i>+62 812-3455-6789</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Galeri Seni. All rights reserved.</p>
+        </div>
+    </div>
+</footer>
